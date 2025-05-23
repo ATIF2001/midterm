@@ -13,6 +13,12 @@ Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
 
 
 
+use App\Http\Controllers\UserController;
+
+Route::get('/create-user-profile', [UserController::class, 'createUserWithProfile']);
+Route::get('/user/{id}/posts', [UserController::class, 'addPostsToUser']);
+Route::get('/user/{id}/roles', [UserController::class, 'assignRolesToUser']);
+Route::get('/user/{id}/details', [UserController::class, 'getUserWithAllRelations']);
 
 
 
@@ -25,18 +31,20 @@ Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
 
 
 
-// Route::get('/', function () {
-//     $name = 'Atif';
-//     $skills = ['HTML', 'CSS', 'PHP', 'Laravel'];
-//     $isLoggedIn = true;
 
-//     return view('welcome', 
-//     compact('name', 'skills', 'isLoggedIn'));
-// });
 
-use app\Http\controllers\pageController;
+Route::get('/', function () {
+    $name = 'Atif';
+    $skills = ['HTML', 'CSS', 'PHP', 'Laravel'];
+    $isLoggedIn = true;
 
-Route::get('/', [pageController::class, 'home']);
+    return view('welcome', 
+    compact('name', 'skills', 'isLoggedIn'));
+});
+
+// use app\Http\controllers\pageController;
+
+// Route::get('/', [pageController::class, 'home']);
 
 
 /*
