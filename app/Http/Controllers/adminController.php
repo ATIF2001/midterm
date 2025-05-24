@@ -4,65 +4,86 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    // 1. Get all admins
+    // Display a listing of all admins
     public function index()
     {
-        $admins = Admin::getAll();
-        return response()->json($admins);
+        $admins = Admin::all(); // Get all admins
+        return view('admins.index', compact('admins')); // Show the view
     }
 
-    // 2. Get a single admin by ID
-    public function show($id)
+    // Show the form to create a new admin
+    public function create()
     {
-        $admin = Admin::getById($id);
-        if (!$admin) {
-            return response()->json(['message' => 'Admin not found'], 404);
-        }
-        return response()->json($admin);
+        return view('admins.create'); // View contains a form to add a new admin
     }
 
-    // 3. Create a new admin
+    // Store a newly created admin in storage
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        // Validate input
+        $data = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:admins',
+            'email' => 'required|email|unique:admins,email',
             'password' => 'required|string|min:6',
         ]);
 
-        $admin = Admin::createAdmin($validated);
-        return response()->json($admin, 201);
+        // Hash password
+        $data['password'] = Hash::make($data['password']);
+
+        // Create the admin
+        Admin::create($data);
+
+        // Redirect to admin list
+        return redirect()->route('admins.index')->with('success', 'Admin created successfully.');
     }
 
-    // 4. Update an existing admin
+    // Display a specific admin
+    public function show($id)
+    {
+        $admin = Admin::findOrFail($id);
+        return view('admins.show', compact('admin'));
+    }
+
+    // Show the form for editing the specified admin
+    public function edit($id)
+    {
+        $admin = Admin::findOrFail($id);
+        return view('admins.edit', compact('admin'));
+    }
+
+    // Update the specified admin
     public function update(Request $request, $id)
     {
-        $admin = Admin::getById($id);
-        if (!$admin) {
-            return response()->json(['message' => 'Admin not found'], 404);
-        }
+        $admin = Admin::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'sometimes|string',
-            'email' => 'sometimes|email|unique:admins,email,' . $id,
-            'password' => 'sometimes|string|min:6',
+        // Validate input
+        $data = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:admins,email,' . $id,
+            'password' => 'nullable|string|min:6',
         ]);
 
-        $updatedAdmin = Admin::updateAdmin($id, $validated);
-        return response()->json($updatedAdmin);
-    }
-
-    // 5. Delete an admin
-    public function destroy($id)
-    {
-        $deleted = Admin::deleteAdmin($id);
-        if (!$deleted) {
-            return response()->json(['message' => 'Admin not found or already deleted'], 404);
+        // If password is not empty, hash it
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']); // Don't overwrite password with null
         }
 
-        return response()->json(['message' => 'Admin deleted successfully']);
+        // Update admin
+        $admin->update($data);
+
+        return redirect()->route('admins.index')->with('success', 'Admin updated successfully.');
+    }
+
+    // Remove the specified admin
+    public function destroy($id)
+    {
+        Admin::destroy($id); // Delete the admin
+        return redirect()->route('admins.index')->with('success', 'Admin deleted successfully.');
     }
 }

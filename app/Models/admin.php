@@ -10,62 +10,35 @@ class Admin extends Model
 {
     use HasFactory;
 
-    // Optional if the table is named 'admins'
+    // Optional if the table name is 'admins'
     protected $table = 'admins';
 
-    // Allow mass assignment on these fields
+    // Fields allowed for mass assignment
     protected $fillable = ['name', 'email', 'password'];
 
-    // Hide password from API/JSON output
+    // Fields hidden from arrays and JSON responses
     protected $hidden = ['password'];
 
-    // Enable timestamps (created_at, updated_at)
+    // Automatically handle created_at and updated_at
     public $timestamps = true;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Basic Common Queries
-    |--------------------------------------------------------------------------
-    */
-
-    // 1. Get all admin records
-    public static function getAll()
+    /**
+     * Mutator: Automatically hash the password when setting it.
+     * This ensures passwords are always stored securely.
+     */
+    public function setPasswordAttribute($value)
     {
-        return self::all();
-    }
-
-    // 2. Get a single admin by ID
-    public static function getById($id)
-    {
-        return self::find($id);
-    }
-
-    // 3. Create a new admin
-    public static function createAdmin($data)
-    {
-        // Encrypt password before saving
-        $data['password'] = Hash::make($data['password']);
-        return self::create($data);
-    }
-
-    // 4. Update an existing admin
-    public static function updateAdmin($id, $data)
-    {
-        $admin = self::find($id);
-        if (!$admin) return null;
-
-        // Encrypt password if it's being updated
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
+        if (!empty($value)) {
+            $this->attributes['password'] = Hash::make($value);
         }
-
-        $admin->update($data);
-        return $admin;
     }
 
-    // 5. Delete an admin by ID
-    public static function deleteAdmin($id)
+    /**
+     * Scope: Get all admins in descending order
+     * Usage: Admin::allAdmins()->get();
+     */
+    public function scopeAllAdmins($query)
     {
-        return self::destroy($id);
+        return $query->orderBy('created_at', 'desc');
     }
 }

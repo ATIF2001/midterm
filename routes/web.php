@@ -1,77 +1,49 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\AdminController;
-
-Route::get('/admins', [AdminController::class, 'index']);
-Route::get('/admins/{id}', [AdminController::class, 'show']);
-Route::post('/admins', [AdminController::class, 'store']);
-Route::put('/admins/{id}', [AdminController::class, 'update']);
-Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
-
-
-
-
 use App\Http\Controllers\UserController;
-
-Route::get('/create-user-profile', [UserController::class, 'createUserWithProfile']);
-Route::get('/user/{id}/posts', [UserController::class, 'addPostsToUser']);
-Route::get('/user/{id}/roles', [UserController::class, 'assignRolesToUser']);
-Route::get('/user/{id}/details', [UserController::class, 'getUserWithAllRelations']);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Route::get('/', function () {
-    $name = 'Atif';
-    $skills = ['HTML', 'CSS', 'PHP', 'Laravel'];
-    $isLoggedIn = true;
-
-    return view('welcome', 
-    compact('name', 'skills', 'isLoggedIn'));
-});
-
-// use app\Http\controllers\pageController;
-
-// Route::get('/', [pageController::class, 'home']);
-
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
+| These routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group.
+|--------------------------------------------------------------------------
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
-Route::redirect("old-home","new-home");
+// ✅ Admin CRUD Routes (full resource controller)
+Route::get('/admins', [AdminController::class, 'index'])->name('admins.index'); // List all admins
+Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create'); // Show create form
+Route::post('/admins', [AdminController::class, 'store'])->name('admins.store'); // Save new admin
+Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show'); // Show a single admin
+Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit'); // Edit form
+Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update'); // Update admin
+Route::delete('/admins/{id}', [AdminController::class, 'destroy'])->name('admins.destroy'); // Delete admin
 
+// 🔁 OR: Use Laravel resource route for all above automatically (optional)
+// Route::resource('admins', AdminController::class); 
 
- Route::view('/home', 'home');
+// ✅ User-Related Routes
+Route::get('/create-user-profile', [UserController::class, 'createUserWithProfile']);
+Route::get('/user/{id}/posts', [UserController::class, 'addPostsToUser']);
+Route::get('/user/{id}/roles', [UserController::class, 'assignRolesToUser']);
+Route::get('/user/{id}/details', [UserController::class, 'getUserWithAllRelations']);
 
- Route::view('/head', 'head');
+// ✅ Basic Test Web View (blade) -> Passing data from routes to views
 
-// Route::view('/', 'index');
+Route::get('/testView', function () {
+    $name = 'Atif';
+    $skills = ['HTML', 'CSS', 'PHP', 'Laravel'];
+    $isLoggedIn = true;
+    return view('welcome', compact('name', 'skills', 'isLoggedIn'));
+});
+
+// ✅ Static Page Routes
+Route::redirect('/old-home', '/new-home');
+Route::view('/home', 'home');
+Route::view('/', 'head');
 Route::view('/login', 'login', ['company' => 'LuxeReply AI']);
 
-// Route::get('/login', function () {
-//     return view('login');
-// });

@@ -13,6 +13,7 @@
     <h1>Welcome, {{ $name }}!</h1>
 
     {{-- Conditional Rendering --}}
+    
     @if($isLoggedIn)
         <p>You are logged in.</p>
     @else
