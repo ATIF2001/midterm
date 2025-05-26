@@ -11,6 +11,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = ['name', 'email', 'password'];
+    protected $hidden = ['password'];
 
     // One-to-One
     public function profile()
@@ -29,4 +30,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+    
+   
+
+ 
+
+
 }

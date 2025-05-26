@@ -45,5 +45,17 @@ Route::get('/testView', function () {
 Route::redirect('/old-home', '/new-home');
 Route::view('/home', 'home');
 Route::view('/', 'head');
-Route::view('/login', 'login', ['company' => 'LuxeReply AI']);
+//Route::view('/login', 'login', ['company' => 'LuxeReply AI']);
 
+
+
+use App\Http\Controllers\AuthController;
+
+Route::get('/login', [AuthController::class, 'showLogin']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegister']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::get('/logout', [AuthController::class, 'logout']);
+
+// Home route: accessible only if session has user_id
+Route::view('/', 'head')->name('home');

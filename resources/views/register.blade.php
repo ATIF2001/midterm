@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Register</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #667eea, #764ba2);
+            background: linear-gradient(to right, #43cea2, #185a9d);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -14,13 +14,13 @@
             margin: 0;
         }
 
-        .login-container {
+        .register-container {
             background-color: white;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             box-sizing: border-box;
         }
 
@@ -30,6 +30,7 @@
             margin-bottom: 24px;
         }
 
+        input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
@@ -44,7 +45,7 @@
         button {
             width: 100%;
             padding: 12px;
-            background-color: #5a67d8;
+            background-color: #2c5282;
             border: none;
             color: white;
             border-radius: 8px;
@@ -54,18 +55,18 @@
         }
 
         button:hover {
-            background-color: #434190;
+            background-color: #2b6cb0;
         }
 
-        .register-link {
+        .login-link {
             display: block;
             text-align: center;
             margin-top: 16px;
-            color: #5a67d8;
+            color: #2c5282;
             text-decoration: none;
         }
 
-        .register-link:hover {
+        .login-link:hover {
             text-decoration: underline;
         }
 
@@ -78,21 +79,23 @@
 </head>
 <body>
 
-    <div class="login-container">
-        <h2>Login</h2>
+    <div class="register-container">
+        <h2>Register</h2>
 
         @if ($errors->any())
             <p class="error-message">{{ $errors->first() }}</p>
         @endif
 
-        <form method="POST" action="/login">
+        <form method="POST" action="/register">
             @csrf
+            <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+            <button type="submit">Register</button>
         </form>
 
-        <a class="register-link" href="/register">Don't have an account? Register</a>
+        <a class="login-link" href="/login">Already have an account? Login</a>
     </div>
 
 </body>
